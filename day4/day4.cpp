@@ -14,7 +14,7 @@ struct gear {
     int nums;
 };
 
-int rec_card_compute(int card_pos, vector<int>& card_nums);
+int rec_card_compute(int card_pos, vector<int>& card_nums, vector<int>& memo);
 
 int main( int argc, char *argv[]) {
 	
@@ -32,7 +32,7 @@ int main( int argc, char *argv[]) {
 
 
     string input;
-    long sum;
+    long sum = 0;
     
     vector<int> card_values = vector<int>();
 
@@ -74,20 +74,28 @@ int main( int argc, char *argv[]) {
 
     cout << endl << endl << endl << "Sum part 1: " << sum << endl;
 
-    long res = rec_card_compute(0, card_values);
+    vector<int> memo = vector<int>();
+    long res = rec_card_compute(0, card_values, memo);
     cout << endl << "Sum part 2: " << res << endl;
 	my_file.close();
 	return 0;
 }
 
 
-int rec_card_compute(int card_pos, vector<int>& card_nums) {
+int rec_card_compute(int card_pos, vector<int>& card_nums, vector<int>& memo) {
+    if (card_pos > card_nums.size()) {
+        return 0;
+    }
+    if (memo[card_pos] != 0) {
+        return memo[card_pos];
+    }
 
     int sum = 1;
     for (int i = 1; i <= card_nums[card_pos]; i++) {
-        sum += rec_card_compute(card_pos + i, card_nums);
+        sum += rec_card_compute(card_pos + i, card_nums, memo);
     }
     cout << sum << " ";
+    memo[card_pos] = sum;
     return sum;
 
 }
